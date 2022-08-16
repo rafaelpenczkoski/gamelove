@@ -6,6 +6,7 @@ import com.comeon.gamelove.service.PlayerService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/players")
@@ -33,14 +34,20 @@ public class PlayerController {
     }
 
     @GetMapping("/{id}/loved-games")
-    public List<Game> lovedGames(@PathVariable Long id) {
+    public Set<Game> lovedGames(@PathVariable Long id) {
         return service.getPlayerLovedGames(id);
     }
 
-    @PutMapping("/{id}/loved-games")
-    public List<Game> loveGame(@PathVariable Long id,
-                               @RequestBody Game game) {
-        return service.loveGame(id, game);
+    @PutMapping("/{playerId}/loved-games/{gameId}")
+    public Set<Game> loveGame(@PathVariable Long playerId,
+                              @PathVariable Long gameId) {
+        return service.loveGame(playerId, gameId);
+    }
+
+    @DeleteMapping("/{playerId}/loved-games/{gameId}")
+    public Set<Game> unloveGame(@PathVariable Long playerId,
+                                @PathVariable Long gameId) {
+        return service.unloveGame(playerId, gameId);
     }
 
 }

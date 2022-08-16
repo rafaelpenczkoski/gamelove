@@ -3,7 +3,8 @@ package com.comeon.gamelove.model;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
-import java.util.List;
+import javax.validation.constraints.NotNull;
+import java.util.Set;
 
 @Entity
 public class Game {
@@ -11,15 +12,16 @@ public class Game {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @NotNull(message = "Name is required")
     private String name;
     @ManyToMany(mappedBy = "lovedGames")
     @JsonIgnore
-    private List<Player> players;
+    private Set<Player> players;
 
     public Game() {
     }
 
-    public Game(Long id, String name, List<Player> players) {
+    public Game(Long id, String name, Set<Player> players) {
         this.id = id;
         this.name = name;
         this.players = players;
@@ -41,11 +43,11 @@ public class Game {
         this.name = name;
     }
 
-    public List<Player> getPlayers() {
+    public Set<Player> getPlayers() {
         return players;
     }
 
-    public void setPlayers(List<Player> players) {
+    public void setPlayers(Set<Player> players) {
         this.players = players;
     }
 }

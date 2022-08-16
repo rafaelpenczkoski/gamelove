@@ -9,6 +9,7 @@ import com.comeon.gamelove.repository.PlayerRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class PlayerService {
@@ -34,15 +35,15 @@ public class PlayerService {
         return playerRepository.save(player);
     }
 
-    public List<Game> getPlayerLovedGames(Long playerId) {
+    public Set<Game> getPlayerLovedGames(Long playerId) {
         return playerRepository.findById(playerId)
                 .orElseThrow(() -> new PlayerNotFoundException(playerId))
                 .getLovedGames();
     }
 
-    public List<Game> loveGame(Long playerId, Game game) {
-        Game dbGame = gameRepository.findById(game.getId())
-                .orElseThrow(() -> new GameNotFoundException(game.getId()));
+    public Set<Game> loveGame(Long playerId, Long gameId) {
+        Game dbGame = gameRepository.findById(gameId)
+                .orElseThrow(() -> new GameNotFoundException(gameId));
 
         Player player = playerRepository.findById(playerId)
                 .orElseThrow(() -> new PlayerNotFoundException(playerId));
@@ -52,4 +53,15 @@ public class PlayerService {
         return player.getLovedGames();
     }
 
+    public Set<Game> unloveGame(Long playerId, Long gameId) {
+        Game dbGame = gameRepository.findById(gameId)
+                .orElseThrow(() -> new GameNotFoundException(gameId));
+
+        Player player = playerRepository.findById(playerId)
+                .orElseThrow(() -> new PlayerNotFoundException(playerId));
+
+        player.getLovedGames().remove(dbGame);
+        playerRepository.save(player);
+        return player.getLovedGames();
+    }
 }
